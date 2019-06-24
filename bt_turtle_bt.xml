@@ -1,0 +1,11 @@
+ <root main_tree_to_execute = "MainTree" >
+     <BehaviorTree ID="MainTree">
+			 <Sequence name="move_and_turn">
+					<OpenGripper name="open_gripper"/>
+          <MoveForward/>
+					<Turn/>
+					<CloseGripper name="close_gripper"/>
+        </Sequence>
+     </BehaviorTree>
+ </root>
+
