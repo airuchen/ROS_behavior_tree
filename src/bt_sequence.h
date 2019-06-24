@@ -63,3 +63,9 @@ public:
 private:
 	bool _open; // shared information
 };
+
+// BT::NodeStatus CheckBattery()
+// {
+// 	ROS_INFO("Battery : OK");
+// 	return BT::NodeStatus::SUCCESS;
+// }

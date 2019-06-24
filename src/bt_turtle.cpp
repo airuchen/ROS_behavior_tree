@@ -19,9 +19,15 @@ int main(int argc, char **argv) {
 
   factory.registerNodeType<MoveForward>("MoveForward");
   factory.registerNodeType<Turn>("Turn");
+
+	// Registering a SimpleAcctionNode using a function pointer
+	// factory.registerSimpleCondition("CheckBattery", std::bind(CheckBattery));
+
+	// Create SimpleActionNode using methods of a class
 	GripperInterface gripper;
 	factory.registerSimpleAction("OpenGripper", std::bind(&GripperInterface::open, &gripper));
 	factory.registerSimpleAction("CloseGripper", std::bind(&GripperInterface::close, &gripper));
+
 
   // Trees are created at deployment-time (i.e. at run-time, but only once at
   // the beginning). The currently supported format is XML. IMPORTANT: when the
@@ -42,3 +48,4 @@ int main(int argc, char **argv) {
   }
   return 0;
 }
+
