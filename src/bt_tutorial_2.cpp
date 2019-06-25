@@ -27,6 +27,24 @@ public:
 	}
 };
 
+
+class ThinkWhatToSay: public SyncActionNode
+{
+public:
+	ThinkWhatToSay(const std::string& name, const NodeConfiguration& config) : SyncActionNode(name, config) {}
+
+	static PortsList providedPorts()
+	{
+		return { OutputPort<std::string>("text") };
+	}
+
+	NodeStatus tick() override
+	{
+		setOutput("text", "The answer is yes");
+		return NodeStatus::SUCCESS;
+	}
+};
+
 int main(int argc, char ** argv)
 {
 	ros::init(argc, argv, "bt_tutorial_2");
@@ -36,14 +54,13 @@ int main(int argc, char ** argv)
 	nh.getParam("file", xml_filename);
 	ROS_INFO("Loading XML : %s", xml_filename.c_str());
 
-	// ROS_INFO("Error 0");
 	BehaviorTreeFactory factory;
+
 	factory.registerNodeType<SaySomething>("SaySomething");
-	// ROS_INFO("Error 1");
+	factory.registerNodeType<ThinkWhatToSay>("ThinkWhatToSay");
 	PortsList say_something_ports = {InputPort<std::string> ("message")};
-	// ROS_INFO("Error 2");
+
 	auto tree = factory.createTreeFromFile(xml_filename);
-	// ROS_INFO("Error 3");
 
 	NodeStatus status = NodeStatus::RUNNING;
 	while (ros::ok() && status == NodeStatus::RUNNING)

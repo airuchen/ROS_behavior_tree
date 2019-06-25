@@ -1,8 +1,10 @@
 <root main_tree_to_execute = "MainTree" >
 	<BehaviorTree ID="MainTree">
-		<Sequence name="move_and_turn">
-			<SaySomething name="first" message="hello world"/>
-			<!--SaySomething name="second" message="{greetings}"/-->
+		<Sequence name="root">
+			<SaySomething name="first" message="Start thinknig..."/>
+			<ThinkWhatToSay text="{the_answer}"/>
+			<SetBlackboard   output_key="the_answer" value="yes" />
+			<SaySomething message="{the_answer}"/>
 		</Sequence>
 	</BehaviorTree>
 </root>
