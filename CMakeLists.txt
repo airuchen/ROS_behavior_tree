@@ -48,6 +48,7 @@ add_executable(${PROJECT_NAME}_node
 
 add_executable(tutorial_2_node  src/bt_tutorial_2.cpp)
 add_executable(tutorial_3_node  src/bt_tutorial_3.cpp)
+add_executable(tutorial_4_node  src/bt_tutorial_4.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -61,6 +62,7 @@ add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catk
 
 add_dependencies(tutorial_2_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(tutorial_3_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(tutorial_4_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}_node
@@ -69,7 +71,6 @@ target_link_libraries(${PROJECT_NAME}_node
 target_link_libraries(tutorial_2_node
   ${catkin_LIBRARIES}
 )
-target_link_libraries(tutorial_3_node
-  ${catkin_LIBRARIES}
-)
+target_link_libraries(tutorial_3_node ${catkin_LIBRARIES} )
+target_link_libraries(tutorial_4_node ${catkin_LIBRARIES} )
 
