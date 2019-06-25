@@ -1,0 +1,9 @@
+<root main_tree_to_execute = "MainTree" >
+	<BehaviorTree ID="MainTree">
+		<Sequence name="move_and_turn">
+			<SaySomething name="first" message="hello world"/>
+			<!--SaySomething name="second" message="{greetings}"/-->
+		</Sequence>
+	</BehaviorTree>
+</root>
+
