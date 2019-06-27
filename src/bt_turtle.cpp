@@ -17,13 +17,17 @@ int main(int argc, char **argv) {
   // We use the BehaviorTreeFactory to register our custom nodes
   BehaviorTreeFactory factory;
 
-  factory.registerNodeType<MoveForward>("MoveForward");
+	NodeBuilder builder_MoveForward = [](const std::string& name, const NodeConfiguration& config)
+	{
+		ros::NodeHandle node;
+		ros::Publisher pub = node.advertise<geometry_msgs::Twist>("/cmd_vel_mux/input/teleop", 1000);
+		return std::make_unique<MoveForward>(name, config, pub);
+	};
+
+	factory.registerBuilder<MoveForward>("MoveForward", builder_MoveForward);
+
   factory.registerNodeType<Turn>("Turn");
 
-	// Registering a SimpleAcctionNode using a function pointer
-	// factory.registerSimpleCondition("CheckBattery", std::bind(CheckBattery));
-
-	// Create SimpleActionNode using methods of a class
 	GripperInterface gripper;
 	factory.registerSimpleAction("OpenGripper", std::bind(&GripperInterface::open, &gripper));
 	factory.registerSimpleAction("CloseGripper", std::bind(&GripperInterface::close, &gripper));

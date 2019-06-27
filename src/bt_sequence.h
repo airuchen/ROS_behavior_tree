@@ -5,8 +5,8 @@
 
 class MoveForward : public BT::SyncActionNode {
 public:
-  MoveForward(const std::string &name, const BT::NodeConfiguration &config)
-      : BT::SyncActionNode(name, config) {}
+  MoveForward(const std::string &name, const BT::NodeConfiguration &config, ros::Publisher pub)
+      : BT::SyncActionNode(name, config), _pub(pub) {}
 
   // It is mandatory to define this static method.
   static BT::PortsList providedPorts() {
@@ -14,10 +14,8 @@ public:
   }
 
   virtual BT::NodeStatus tick() override;
-
 private:
-	ros::NodeHandle node;
-	ros::Publisher _pub = node.advertise<geometry_msgs::Twist>("/cmd_vel_mux/input/teleop", 1000);
+	ros::Publisher _pub;
 };
 
 class Turn : public BT::SyncActionNode {
