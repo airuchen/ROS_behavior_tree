@@ -4,11 +4,45 @@
 
 using namespace BT;
 
+typedef enum {IDLE, UP, DOWN, WAIT} CURRENT_STATE;
+
 struct ElevatorState
 {
-	enum current_direction{idle, up, down};
+	CURRENT_STATE current_state;
+	int current_floor;
 	int next_goal;
 	int goal_temp[10] = {0};
+};
+
+// namespace BT
+// {
+// 	template <> inline ElevatorState convertFromString(StringView str)
+// 	{
+// 		auto part
+// 	}
+// }
+
+class Initial : public SyncActionNode
+{
+	public:
+		Initial(const std::string& name, const NodeConfiguration& config) : SyncActionNode(name, config) {}
+
+		NodeStatus tick() override
+		{
+			ElevatorState e_state;
+			e_state.current_state = IDLE;
+			e_state.current_floor = 1;
+			e_state.next_goal = 4;
+
+			ROS_INFO("Initialized, welcome aboard.");
+			setOutput("state", e_state);
+			return NodeStatus::SUCCESS;
+		}
+
+		static PortsList providedPorts()
+		{
+			return {OutputPort<ElevatorState>("state")};
+		}
 };
 
 class WaitForGoal : public SyncActionNode
@@ -18,16 +52,18 @@ class WaitForGoal : public SyncActionNode
 
 		NodeStatus tick() override
 		{
-			std::string floor;
+			Optional<ElevatorState> state = getInput<ElevatorState>("state");
 			std::cout << "enter your desired floor" << std::endl;
+			int floor;
 			std::cin >> floor;
-			setOutput("target", floor);
+			state->next_goal = floor;
+			setOutput("state", state);
 			return NodeStatus::SUCCESS;
 		}
 
 		static PortsList providedPorts()
 		{
-			return {OutputPort<int>("target")};
+			return {OutputPort<ElevatorState>("state"), InputPort<ElevatorState>("state")};
 		}
 };
 
@@ -38,20 +74,15 @@ class GoFloor : public SyncActionNode
 
 		NodeStatus tick() override
 		{
-			Optional<std::string> msg = getInput<std::string>("goal");
+			Optional<ElevatorState> state = getInput<ElevatorState>("state");
 
-			if(!msg)
-			{
-				throw BT::RuntimeError("missing required input [goal]: ", msg.error());
-			}
-
-			std::cout << "Toward " << msg.value() << " floor." << std::endl;
+			std::cout << "Toward " << state->next_goal << " floor." << std::endl;
 			return NodeStatus::SUCCESS;
 		}
 
 		static PortsList providedPorts()
 		{
-			return {InputPort<int>("goal")};
+			return {InputPort<ElevatorState>("state")};
 		}
 };
 
@@ -67,6 +98,7 @@ int main(int argc, char** argv)
 
 	BehaviorTreeFactory factory;
 
+	factory.registerNodeType<Initial>("Initial");
 	factory.registerNodeType<WaitForGoal>("WaitForGoal");
 	factory.registerNodeType<GoFloor>("GoFloor");
 
