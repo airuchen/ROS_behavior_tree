@@ -1,0 +1,9 @@
+<root>
+	<BehaviorTree ID="SimpleElevator">
+		<Sequence>
+			<!--Initial /-->
+			<WaitForGoal target="{goal_floor}" />
+			<GoFloor goal="{goal_floor}" />
+		</Sequence>
+	</BehaviorTree>
+</root>
